@@ -15,6 +15,11 @@ class AiService {
   static const String _defaultModel = '';
   // Removed: NVIDIA-specific constants, model lists, and URL check methods.
 
+  /// Compile-time API key injected via --dart-define=API_KEY=...
+  /// Falls back to empty string if not provided at build time.
+  static const String _builtInApiKey =
+      String.fromEnvironment('API_KEY', defaultValue: '');
+
   String? _apiKey;
   String _baseUrl = _defaultBaseUrl;
   String _model = _defaultModel;
@@ -75,6 +80,12 @@ Answer questions, explain concepts, brainstorm, write emails/messages, and chat 
   Future<void> init() async {
     final prefs = await SharedPreferences.getInstance();
     _apiKey = prefs.getString('api_key');
+    // If no API key saved yet but one was compiled in via dart-define, use it
+    if ((_apiKey == null || _apiKey!.isEmpty) && _builtInApiKey.isNotEmpty) {
+      _apiKey = _builtInApiKey;
+      // Also save it to prefs so it persists across restarts
+      await prefs.setString('api_key', _builtInApiKey);
+    }
     _baseUrl = prefs.getString('api_base_url') ?? _defaultBaseUrl;
     _model = prefs.getString('api_model') ?? _defaultModel;
     _maxSteps = prefs.getInt('api_max_steps') ?? 15;
