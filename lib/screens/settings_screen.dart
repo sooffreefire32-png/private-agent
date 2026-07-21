@@ -204,13 +204,10 @@ class _SettingsScreenState extends State<SettingsScreen>
     }
 
     if (mounted) {
-      final isNvidia = AiService.isNvidiaBaseUrl(baseUrl);
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text(
-            isNvidia ? 'Select a Free NVIDIA Model' : 'Select a Model',
-          ),
+          title: const Text('Select a Model'),
           content: SizedBox(
             width: double.maxFinite,
             height: 300,
@@ -513,15 +510,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                     onPressed: () => _baseUrlController.text =
                         'https://api.groq.com/openai/v1',
                   ),
-                  ActionChip(
-                    avatar: const Icon(Icons.memory_rounded, size: 16),
-                    label: const Text('NVIDIA', style: TextStyle(fontSize: 11)),
-                    tooltip: 'NVIDIA NIM free endpoints',
-                    onPressed: () {
-                      _baseUrlController.text = AiService.nvidiaBaseUrl;
-                      _modelController.text = AiService.nvidiaDefaultModel;
-                    },
-                  ),
+
                   ActionChip(
                     label: const Text('Custom', style: TextStyle(fontSize: 11)),
                     tooltip: 'Clear fields',

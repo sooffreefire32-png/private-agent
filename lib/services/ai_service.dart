@@ -11,42 +11,9 @@ class AiResponse {
 }
 
 class AiService {
-  static const String _defaultBaseUrl = 'https://api.deepseek.com';
-  static const String _defaultModel = 'deepseek-chat';
-  static const String nvidiaBaseUrl = 'https://integrate.api.nvidia.com/v1';
-  static const String nvidiaDefaultModel = 'z-ai/glm-5.2';
-
-  /// Free, general-purpose chat endpoints verified in NVIDIA's NIM catalog.
-  /// The live /models response is intersected with this list so unavailable or
-  /// non-chat models never appear in PrivateAgent's NVIDIA model picker.
-  static const List<String> nvidiaFreeChatModels = [
-    'z-ai/glm-5.2',
-    'nvidia/nemotron-3-nano-30b-a3b',
-    'nvidia/nemotron-3-super-120b-a12b',
-    'nvidia/nemotron-3-ultra-550b-a55b',
-    'nvidia/nvidia-nemotron-nano-9b-v2',
-    'openai/gpt-oss-20b',
-    'openai/gpt-oss-120b',
-    'meta/llama-3.3-70b-instruct',
-    'meta/llama-3.2-3b-instruct',
-    'meta/llama-3.1-8b-instruct',
-    'meta/llama-3.1-70b-instruct',
-    'mistralai/mistral-nemotron',
-    'deepseek-ai/deepseek-v4-flash',
-    'deepseek-ai/deepseek-v4-pro',
-  ];
-
-  static bool isNvidiaBaseUrl(String baseUrl) {
-    final uri = Uri.tryParse(baseUrl.trim());
-    return uri?.host.toLowerCase() == 'integrate.api.nvidia.com';
-  }
-
-  static List<String> filterNvidiaFreeModels(Iterable<String> models) {
-    final availableModels = models.toSet();
-    return nvidiaFreeChatModels
-        .where(availableModels.contains)
-        .toList(growable: false);
-  }
+  static const String _defaultBaseUrl = '';
+  static const String _defaultModel = '';
+  // Removed: NVIDIA-specific constants, model lists, and URL check methods.
 
   String? _apiKey;
   String _baseUrl = _defaultBaseUrl;
@@ -186,13 +153,6 @@ Answer questions, explain concepts, brainstorm, write emails/messages, and chat 
   bool get useSystemPrompt => _useSystemPrompt;
 
   int get _effectiveMaxTokens {
-    // GLM is a reasoning model. With the app's 1,024-token default it can
-    // consume the whole budget reasoning and finish without visible content.
-    if (isNvidiaBaseUrl(_baseUrl) &&
-        _model == nvidiaDefaultModel &&
-        _maxTokens < 4096) {
-      return 4096;
-    }
     return _maxTokens;
   }
 
@@ -640,9 +600,6 @@ Answer questions, explain concepts, brainstorm, write emails/messages, and chat 
           return [];
         }
 
-        if (isNvidiaBaseUrl(cleanBaseUrl)) {
-          return filterNvidiaFreeModels(models);
-        }
         models.sort();
         return models;
       }

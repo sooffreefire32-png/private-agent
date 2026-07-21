@@ -13,6 +13,7 @@ import '../services/chat_history_service.dart';
 import '../services/notification_service.dart';
 import 'settings_screen.dart';
 import 'task_history_screen.dart';
+import 'ai_movie_studio_screen.dart';
 import 'package:flutter_overlay_window/flutter_overlay_window.dart';
 import '../main.dart';
 import '../config/feature_flags.dart';
@@ -921,7 +922,68 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
           const Divider(indent: 16, endIndent: 16, height: 20),
 
+          // Section AI MOVIE STUDIO
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 6),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'AI MOVIE STUDIO',
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w800,
+                  color: Theme.of(context).colorScheme.primary,
+                  letterSpacing: 1.5,
+                ),
+              ),
+            ),
+          ),
+          ListTile(
+            horizontalTitleGap: 8,
+            leading: Icon(
+              Icons.movie_creation_rounded,
+              color: Theme.of(context).colorScheme.primary,
+              size: 20,
+            ),
+            title: Text('AI Movie Studio', style: textStyle),
+            subtitle: Text(
+              'Turn stories into animations',
+              style: TextStyle(
+                fontSize: 10.5,
+                color: isDark ? Colors.grey[600] : Colors.grey[500],
+              ),
+            ),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => AiMovieStudioScreen(
+                    aiService: _aiService,
+                  ),
+                ),
+              );
+            },
+          ),
+          const SizedBox(height: 8),
+          const Divider(indent: 16, endIndent: 16, height: 0),
+
           // Section TASKS & SETTINGS
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 6),
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'TASKS & SETTINGS',
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w800,
+                  color: Theme.of(context).colorScheme.primary,
+                  letterSpacing: 1.5,
+                ),
+              ),
+            ),
+          ),
           ListTile(
             horizontalTitleGap: 8,
             leading: Icon(
